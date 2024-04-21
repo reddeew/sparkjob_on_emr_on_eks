@@ -1,0 +1,14 @@
+aws emr-containers start-job-run \
+--virtual-cluster-id ${EMR_EKS_CLUSTER_ID} \
+--name spark-etl \
+--execution-role-arn ${EMR_EKS_EXECUTION_ARN} \
+--release-label emr-6.2.0-latest \
+--job-driver '{
+    "sparkSubmitJobDriver": {
+        "entryPoint": "s3://path-to-your-spark-script/spark-etl.py",
+        "entryPointArguments": ["s3://aws-data-analytics-workshops/shared_datasets/tripdata/",
+          "s3://your-output-bucket/taxi-data/"
+        ],
+        "sparkSubmitParameters": "--conf spark.executor.instances=2 --conf spark.executor.memory=2G --conf spark.executor.cores=2 --conf spark.driver.cores=1"
+        }
+    }'
